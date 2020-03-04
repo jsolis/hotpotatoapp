@@ -38,7 +38,19 @@
         if (searchTerm === "") searchTerm = "frozen";
         movies = []
         loading = "loading..."
-        const response = await fetch(`http://hp.mags24.com/hotpotato/search/${searchTerm}`)
+        let response
+        try {
+            response = await fetch("https://hubot.coffee/proxy", 
+                {
+                    method: "GET",
+                    headers: {
+                        fetchURL: `http://hp.mags24.com/hotpotato/search/${searchTerm}`,
+                        Authorization: "foobar"
+                    }
+                })
+        } catch(e) {
+            console.log('catch', e)
+        }
         const moviesResponse = await response.json()
         loading = ""
         movies = moviesResponse.movies
