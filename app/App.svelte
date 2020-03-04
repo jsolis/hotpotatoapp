@@ -12,7 +12,12 @@
 
         <listView items="{movies}" on:itemTap="{onItemTap}" row="2" colSpan="2">
             <Template let:item>
-                <label text="{item.original_title + ' ' + item.released}" textWrap="true" />
+                <image src="{item.images.poster[0]}" stretch="none" />
+                <label text="{`${item.original_title} (${item.released})`}" textWrap="true" />
+                <label text="{getInLibrary(item)}" />
+                {#if showDownloadButton(item)}
+                    <button text="Download" on:tap="{() => downloadMovie(item)}" />
+                {/if}
             </Template>
         </listView>
     </gridLayout>
@@ -21,6 +26,9 @@
 <script>
     import { Template } from 'svelte-native/components'
     import { alert } from 'tns-core-modules/ui/dialogs'
+    import { navigate } from 'svelte-native'
+
+    import MovieDetails from './MovieDetails.svelte'
 
     let movies = []
     let searchTerm = ""
@@ -36,30 +44,31 @@
         movies = moviesResponse.movies
     }
 
-    async function onItemTap(args) {
+    function onItemTap(args) {
+        navigate({
+            page: MovieDetails,
+            props: { imdb: movies[args.index].imdb }
+        })
+    }
 
-        alert('details TBD')
+    function getInLibrary(movie) {
+        if (movie.in_library) return "In Library"
+        else if (movie.in_wanted) return "In Download Queue"
+        else return ""
+    }
 
-        /*
-        let result = await action("What do you want to do with this task?", "Cancel", [
-            "Mark completed",
-            "Delete forever"
-        ]);
+    function showDownloadButton(movie) {
+        return (!movie.in_library && !movie.in_wanted)
+    }
 
-        console.log(result); // Logs the selected option for debugging.
-        let item = todos[args.index]
-        switch (result) {
-            case "Mark completed":
-                dones = addToList(dones, item) // Places the tapped active task at the top of the completed tasks.
-                todos = removeFromList(todos, item) // Removes the tapped active task.
-                break;
-            case "Delete forever":
-                todos = removeFromList(todos, item) // Removes the tapped active task.
-                break;
-            case "Cancel" || undefined: // Dismisses the dialog
-                break;
-        }
-        */
+    async function downloadMovie(movie) {
+        const imdb = movie.imdb
+        const title = escape(movie.original_title)
+        const url = `http://hp.mags24.com/hotpotato/movie.add/${imdb}/${title}`;
+        const response = await fetch(url)
+        const downloadResponse = await response.json()
+        if (downloadResponse.success) alert(`Downloading ${movie.original_title}`)
+        else alert(`Failed to Download ${movie.original_title}`)
     }
     
 </script>
