@@ -5,7 +5,7 @@
         <!-- Configures the text field and ensures that pressing Return on the keyboard
             produces the same result as tapping the button. -->
         <textField col="0" row="0" bind:text="{searchTerm}" hint="Search movies..." editable="true"
-            on:returnPress="{onButtonTap}" />
+            on:returnPress="{searchMovies}" />
         <button col="1" row="0" text="Search" on:tap="{searchMovies}" class="-primary" />
 
         <label text={loading} row="1" colspan="2"/>
@@ -34,17 +34,13 @@
     const addToList = (list, item) => [item, ...list]
 
     async function searchMovies() {
-        //if (searchTerm === "") return;
+        if (searchTerm === "") searchTerm = "frozen";
         movies = []
         loading = "loading..."
-        setTimeout(() => {
-            loading = ""
-            movies = [
-                {original_title: 'Frozen', released: "2013-11-27"},
-                {original_title: 'Frozen 2', released: "2019-11-20"},
-            ]
-        }, 1000);
-
+        const response = await fetch(`http://hp.mags24.com/hotpotato/search/${searchTerm}`)
+        const moviesResponse = await response.json()
+        loading = ""
+        movies = moviesResponse.movies
     }
 
     async function onItemTap(args) {
@@ -71,13 +67,6 @@
                 break;
         }
         */
-    }
-
-    function onButtonTap() {
-        if (textFieldValue === "") return; // Prevents users from entering an empty string.
-        console.log("New task added: " + textFieldValue + "."); // Logs the newly added task in the console for debugging.
-        todos = [{ name: textFieldValue }, ...todos] // Adds tasks in the ToDo array. Newly added tasks are immediately shown on the screen.
-        textFieldValue = ""; // Clears the text field so that users can start adding new tasks immediately.
     }
     
     async function onDoneTap(args) {
