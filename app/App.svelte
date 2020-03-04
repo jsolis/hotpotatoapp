@@ -22,16 +22,9 @@
     import { Template } from 'svelte-native/components'
     import { alert } from 'tns-core-modules/ui/dialogs'
 
-    let todos = []
-    let dones = [] //completed items go here
-    let textFieldValue = ""
-
     let movies = []
     let searchTerm = ""
     let loading = ""
-
-    const removeFromList = (list, item) => list.filter(t => t !== item);
-    const addToList = (list, item) => [item, ...list]
 
     async function searchMovies() {
         if (searchTerm === "") searchTerm = "frozen";
@@ -69,26 +62,6 @@
         */
     }
     
-    async function onDoneTap(args) {
-      let result = await action("What do you want to do with this task?", "Cancel", [
-          "Mark To Do",
-          "Delete forever"
-      ]);
-
-      console.log(result); // Logs the selected option for debugging.
-      let item = dones[args.index]
-      switch (result) {
-          case "Mark To Do":
-              todos = addToList(todos, item) // Places the tapped active task at the top of the completed tasks.
-              dones = removeFromList(dones, item) // Removes the tapped active task.
-              break;
-          case "Delete forever":
-              dones = removeFromList(dones, item) // Removes the tapped active task.
-              break;
-          case "Cancel" || undefined: // Dismisses the dialog
-              break;
-      }
-    }
 </script>
 
 <style>
