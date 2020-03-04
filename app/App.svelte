@@ -74,11 +74,7 @@
 </script>
 
 <style>
-	textField {
-			font-size: 20;
-  }
-  .todo-item-completed {
-    color: #939393;
-    text-decoration: line-through;
-  }
+    textField {
+        font-size: 20;
+    }
 </style>
