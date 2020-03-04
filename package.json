@@ -27,7 +27,7 @@
   "gitHead": "c06800e52ee1a184ea2dffd12a6702aaa43be4e3",
   "readme": "NativeScript Application",
   "scripts": {
-    "android-emulator": "emulator -avd androidVM",
+    "android-emulator": "cd /usr/local/share/android-sdk/tools; emulator -avd test",
     "android": "tns run android",
     "ios": "tns run ios"
   }
