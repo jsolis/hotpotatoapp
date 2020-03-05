@@ -29,6 +29,8 @@
   "scripts": {
     "android-emulator": "cd /usr/local/share/android-sdk/tools; emulator -avd test",
     "android": "tns run android",
-    "ios": "tns run ios"
+    "ios": "tns run ios",
+    "build-android": "tns build android",
+    "build-ios": "tns build ios"
   }
 }
