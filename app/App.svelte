@@ -12,12 +12,20 @@
 
         <listView items="{movies}" on:itemTap="{onItemTap}" row="2" colSpan="2">
             <Template let:item>
-                <image src="{item.images.poster[0]}" stretch="none" />
-                <label text="{`${item.original_title} (${item.released})`}" textWrap="true" />
-                <label text="{getInLibrary(item)}" />
-                {#if showDownloadButton(item)}
-                    <button text="Download" on:tap="{() => downloadMovie(item)}" />
-                {/if}
+                <gridLayout columns="100, *" rows="50,50,50">
+                    <image src="{item.images.poster[0]}" stretch="none" rowspan="3" col="0" />
+
+                    <label textWrap="true" row="0" col="1">
+                        <formattedString>
+                            <span text="{`${item.original_title} `}" fontWeight="bold" />
+                            <span text="{`(${item.year})`}" />
+                        </formattedString>
+                    </label>
+                    <label text="{getInLibrary(item)}" style="color: green" row="1" col="1" />
+                    {#if showDownloadButton(item)}
+                        <button text="Download" on:tap="{() => downloadMovie(item)}" class="download" row="2" col="1" />
+                    {/if}
+                </gridLayout>
             </Template>
         </listView>
     </gridLayout>
@@ -88,5 +96,10 @@
 <style>
     textField {
         font-size: 20;
+    }
+
+    .download {
+        background-color: #DFA800;
+        color: black;
     }
 </style>
