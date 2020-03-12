@@ -57,7 +57,9 @@
                     }
                 })
         } catch(e) {
-            console.log('catch', e)
+            console.log(e)
+            loading = `${e.name}: ${e.message}`
+            return
         }
         const moviesResponse = await response.json()
         loading = ""
@@ -84,8 +86,21 @@
     async function downloadMovie(movie) {
         const imdb = movie.imdb
         const title = escape(movie.original_title)
-        const url = `http://hp.mags24.com/hotpotato/movie.add/${imdb}/${title}`;
-        const response = await fetch(url)
+        let response
+        try {
+            response = await fetch("https://hubot.coffee/proxy", 
+                {
+                    method: "GET",
+                    headers: {
+                        fetchURL: `http://hp.mags24.com/hotpotato/movie.add/${imdb}/${title}`,
+                        Authorization: "foobar"
+                    }
+                })
+        } catch(e) {
+            console.log(e)
+            alert(`${e.name}: ${e.message}`)
+            return
+        }
         const downloadResponse = await response.json()
         if (downloadResponse.success) alert(`Downloading ${movie.original_title}`)
         else alert(`Failed to Download ${movie.original_title}`)
